@@ -1,6 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
-const { protect, admin } = require('../middleware/auth.js');
+import { protect, admin } from '../middleware/auth.js';
 
 const router = express.Router();
 
