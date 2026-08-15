@@ -1,7 +1,8 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
-const { protect, admin } = require('../middleware/auth.js');
+import { protect, admin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.get('/user-posts/:userId', protect, async (req, res) => {
   }
 
   const pipeline = [
-    { $match: { user: require('mongoose').Types.ObjectId(userId) } },
+    { $match: { user: new mongoose.Types.ObjectId(userId) } },
     {
       $lookup: {
         from: 'users',
