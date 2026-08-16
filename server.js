@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from './config/db.js';
+import { ensureDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import noteRoutes from './routes/notes.js';
 import adminRoutes from './routes/admin.js';
@@ -25,23 +25,14 @@ app.use('/api/aggregations', aggregationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    
-    if (process.env.VERCEL !== '1') {
-      app.listen(PORT, () => {
-        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-      });
-    }
-  } catch (error) {
-    console.error('Failed to connect to database:', error);
-    if (process.env.VERCEL !== '1') {
-      process.exit(1);
-    }
-  }
-};
-
-startServer();
+if (process.env.VERCEL !== '1') {
+  ensureDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
+  }).catch((err) => {
+    console.error('Failed to connect to MongoDB on startup:', err);
+  });
+}
 
 export default app;

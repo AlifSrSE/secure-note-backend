@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
+import { ensureDB } from '../config/db.js';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ const generateToken = (id) => {
 };
 
 router.post('/register', async (req, res) => {
+  await ensureDB();
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -41,6 +43,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  await ensureDB();
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).select('+password');

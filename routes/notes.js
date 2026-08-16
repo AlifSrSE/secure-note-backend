@@ -1,12 +1,14 @@
 import express from 'express';
 import Note from '../models/Note.js';
 import { protect, admin } from '../middleware/auth.js';
+import { ensureDB } from '../config/db.js';
 
 const router = express.Router();
 
 const PAGE_SIZE = 10;
 
 router.get('/', protect, async (req, res) => {
+  await ensureDB();
   const page = parseInt(req.query.page) || 1;
   const skip = (page - 1) * PAGE_SIZE;
 
@@ -32,6 +34,7 @@ router.get('/', protect, async (req, res) => {
 });
 
 router.get('/:id', protect, async (req, res) => {
+  await ensureDB();
   let note = await Note.findById(req.params.id).populate('user', 'name email');
 
   if (!note) {
@@ -46,6 +49,7 @@ router.get('/:id', protect, async (req, res) => {
 });
 
 router.post('/', protect, async (req, res) => {
+  await ensureDB();
   const note = await Note.create({
     ...req.body,
     user: req.user._id,
@@ -55,6 +59,7 @@ router.post('/', protect, async (req, res) => {
 });
 
 router.put('/:id', protect, async (req, res) => {
+  await ensureDB();
   let note = await Note.findById(req.params.id);
 
   if (!note) {
@@ -70,6 +75,7 @@ router.put('/:id', protect, async (req, res) => {
 });
 
 router.delete('/:id', protect, async (req, res) => {
+  await ensureDB();
   let note = await Note.findById(req.params.id);
 
   if (!note) {

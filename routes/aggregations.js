@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Post from '../models/Post.js';
 import { protect, admin } from '../middleware/auth.js';
+import { ensureDB } from '../config/db.js';
 
 const router = express.Router();
 
 router.get('/users-by-interest', protect, admin, async (req, res) => {
+  await ensureDB();
   const pipeline = [
     { $unwind: '$interests' },
     {
@@ -24,6 +26,7 @@ router.get('/users-by-interest', protect, admin, async (req, res) => {
 });
 
 router.get('/user-posts/:userId', protect, async (req, res) => {
+  await ensureDB();
   const { userId } = req.params;
 
   if (req.user.role !== 'admin' && userId !== req.user._id.toString()) {

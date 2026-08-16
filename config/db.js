@@ -21,4 +21,11 @@ const connectDB = async () => {
   }
 };
 
+export const ensureDB = async () => {
+  if (!cached.connection) {
+    await connectDB();
+  }
+  return cached.connection;
+};
+
 export default connectDB;

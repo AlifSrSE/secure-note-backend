@@ -1,12 +1,14 @@
 import express from 'express';
 import User from '../models/User.js';
 import { protect, admin } from '../middleware/auth.js';
+import { ensureDB } from '../config/db.js';
 
 const router = express.Router();
 
 const PAGE_SIZE = 10;
 
 router.get('/', protect, admin, async (req, res) => {
+  await ensureDB();
   const page = parseInt(req.query.page) || 1;
   const skip = (page - 1) * PAGE_SIZE;
 
@@ -27,6 +29,7 @@ router.get('/', protect, admin, async (req, res) => {
 });
 
 router.get('/:id', protect, admin, async (req, res) => {
+  await ensureDB();
   const user = await User.findById(req.params.id).select('-password');
 
   if (!user) {
@@ -37,6 +40,7 @@ router.get('/:id', protect, admin, async (req, res) => {
 });
 
 router.put('/:id', protect, admin, async (req, res) => {
+  await ensureDB();
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -61,6 +65,7 @@ router.put('/:id', protect, admin, async (req, res) => {
 });
 
 router.delete('/:id', protect, admin, async (req, res) => {
+  await ensureDB();
   const user = await User.findById(req.params.id);
 
   if (!user) {
