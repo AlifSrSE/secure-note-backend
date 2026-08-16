@@ -7,6 +7,33 @@ const router = express.Router();
 
 const PAGE_SIZE = 10;
 
+router.post('/', protect, admin, async (req, res) => {
+  await ensureDB();
+  const { name, email, password, role, interests } = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    return res.status(400).json({ message: 'User already exists' });
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role: role || 'user',
+    interests: interests || [],
+  });
+
+  res.status(201).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    interests: user.interests,
+  });
+});
+
 router.get('/', protect, admin, async (req, res) => {
   await ensureDB();
   const page = parseInt(req.query.page) || 1;
