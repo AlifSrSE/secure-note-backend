@@ -9,12 +9,16 @@ if (!global.mongoose) {
 const connectDB = async () => {
   if (cached.connection) return cached.connection;
 
-  const conn = await mongoose.connect(process.env.MONGODB_URI, {
-    bufferCommands: false,
-  });
-
-  cached.connection = conn;
-  return conn;
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: false,
+    });
+    cached.connection = conn;
+    return conn;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
 };
 
 export default connectDB;
