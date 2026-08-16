@@ -23,6 +23,11 @@ app.use('/api/notes', noteRoutes);
 app.use('/api/admin/users', adminRoutes);
 app.use('/api/aggregations', aggregationRoutes);
 
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ message: 'Server Error', error: err.message });
+});
+
 const PORT = process.env.PORT || 5000;
 
 if (process.env.VERCEL !== '1') {
