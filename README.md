@@ -17,7 +17,10 @@ Update `.env` with your MongoDB URI and JWT secret.
 npm run seed
 ```
 
-Default admin: `admin@example.com` / `admin123`
+Default admin credentials:
+- Name: Admin
+- Email: admin@example.com
+- Password: secureadmin
 
 ## Run
 
