@@ -9,8 +9,6 @@ import aggregationRoutes from './routes/aggregations.js';
 
 dotenv.config();
 
-connectDB();
-
 const app = express();
 
 app.use(cors());
@@ -27,10 +25,23 @@ app.use('/api/aggregations', aggregationRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-if (process.env.VERCEL !== '1') {
-  app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-  });
-}
+const startServer = async () => {
+  try {
+    await connectDB();
+    
+    if (process.env.VERCEL !== '1') {
+      app.listen(PORT, () => {
+        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+      });
+    }
+  } catch (error) {
+    console.error('Failed to connect to database:', error);
+    if (process.env.VERCEL !== '1') {
+      process.exit(1);
+    }
+  }
+};
+
+startServer();
 
 export default app;
