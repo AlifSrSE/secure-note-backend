@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
-      index: true,
     },
     interests: [
       {
@@ -41,7 +40,6 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.index({ email: 1 });
-userSchema.index({ role: 1 });
 userSchema.index({ interests: 1 });
 userSchema.index({ createdAt: -1 });
 
