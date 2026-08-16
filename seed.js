@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import bcrypt from 'bcryptjs';
 import User from './models/User.js';
 
 dotenv.config();
@@ -10,20 +9,17 @@ const seedAdmin = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB connected');
 
-    const existingAdmin = await User.findOne({ email: 'admin@example.com' });
+    const existingAdmin = await User.findOne({ email: 'secureadmin@example.com' });
 
     if (existingAdmin) {
       console.log('Admin already exists');
       process.exit(0);
     }
 
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash('secureadmin', salt);
-
     const admin = await User.create({
       name: 'Admin',
-      email: 'admin@example.com',
-      password: hashedPassword,
+      email: 'secureadmin@example.com',
+      password: 'secureadmin',
       role: 'admin',
       interests: ['coding', 'admin'],
     });

@@ -19,7 +19,7 @@ npm run seed
 
 Default admin credentials:
 - Name: Admin
-- Email: admin@example.com
+- Email: secureadmin@example.com
 - Password: secureadmin
 
 ## Run
